@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: grafana/fleet-management-sync-action@v1
+      - uses: grafana/fleet-management-sync-action@v0.3.0
         with:
           pipelines-root-path: ./pipelines
           fm-url: ${{ secrets.FM_URL }}
