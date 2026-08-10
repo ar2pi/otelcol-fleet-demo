@@ -6,7 +6,7 @@
 #   FM_API_TOKEN=<write-token> ./scripts/upsert-pipeline.py --delete canary-checkout-debug
 #
 # (Deployed via the Pipeline API, not gcx: `gcx fleet pipelines create`
-# currently only accepts Alloy-type pipelines — see examples/canary-alloy-debug.yaml.)
+# currently only accepts Alloy-type pipelines.)
 #
 name: canary-checkout-debug
 config_type: otel

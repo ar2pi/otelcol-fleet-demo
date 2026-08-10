@@ -72,19 +72,15 @@ git show main:pipelines/dev-otlp-debug.yaml
 Scenario: the `checkout` team's collectors are misbehaving and you want
 detailed debug output from them *now*, without waiting for a PR cycle.
 
-Two routes, depending on the pipeline type. As of gcx fleet provider
-`v1alpha1`, `gcx fleet pipelines create` **only accepts Alloy-type
-pipelines** — contents are validated as Alloy (River) syntax and names must be
-valid Alloy identifiers (underscores, no dashes). OTel-type pipelines (what
-this demo's collectors run) go through the Pipeline API instead.
-
-Both canary manifests live in `examples/`, not `pipelines/`, so the GitOps
-sync never deploys or deletes them.
-
-### 3a. OTel fleet (this demo) — via the Pipeline API
+One caveat first: as of gcx fleet provider `v1alpha1`,
+`gcx fleet pipelines create` only accepts Alloy-type pipelines (contents are
+validated as Alloy syntax), so **OTel-type pipelines are written through the
+Pipeline API** via [`scripts/upsert-pipeline.py`](../scripts/upsert-pipeline.py)
+— gcx still does all the reading and verification.
 
 [`examples/canary-checkout-debug.yaml`](../examples/canary-checkout-debug.yaml)
-targets only `team="checkout"`:
+targets only `team="checkout"`. It lives in `examples/`, not `pipelines/`, so
+the GitOps sync never deploys or deletes it:
 
 ```sh
 # 1. Read current state first
@@ -100,19 +96,6 @@ gcx fleet collectors get collector-prod-checkout -o yaml
 # 4. Investigate (make logs shows the extra debug output on checkout
 #    collectors only), then clean up
 FM_API_TOKEN=<token> ./scripts/upsert-pipeline.py --delete canary-checkout-debug
-```
-
-### 3b. Alloy fleet — pure gcx
-
-gcx expects the k8s-style resource manifest (`apiVersion`/`kind`/`metadata`/
-`spec`) — discover the format with `gcx resources examples pipelines -o yaml`.
-[`examples/canary-alloy-debug.yaml`](../examples/canary-alloy-debug.yaml) is
-ready to go:
-
-```sh
-gcx fleet pipelines create -f examples/canary-alloy-debug.yaml
-gcx fleet pipelines get canary_checkout_debug -o yaml
-gcx fleet pipelines delete canary_checkout_debug
 ```
 
 ## Caveats: gcx writes vs GitOps
