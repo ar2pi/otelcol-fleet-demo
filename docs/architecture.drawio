@@ -1,0 +1,150 @@
+<mxfile host="app.diagrams.net" agent="claude-code" version="24.7.7">
+  <diagram id="otelcol-fleet-demo" name="Architecture">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Zones -->
+        <mxCell id="z-dev" value="Dev laptop" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=13;fontStyle=1;spacingLeft=8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="40" width="270" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="z-gh" value="GitHub" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=13;fontStyle=1;spacingLeft=8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="340" y="40" width="290" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="z-gc" value="Grafana Cloud" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#F46800;dashed=1;verticalAlign=top;align=left;fontSize=13;fontStyle=1;spacingLeft=8;spacingTop=4;fontColor=#F46800;" vertex="1" parent="1">
+          <mxGeometry x="700" y="40" width="660" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="z-fleet" value="Local fleet — docker compose" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=13;fontStyle=1;spacingLeft=8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="340" y="560" width="1020" height="300" as="geometry" />
+        </mxCell>
+
+        <!-- Dev laptop -->
+        <mxCell id="dev" value="Developer" style="shape=actor;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;verticalLabelPosition=bottom;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="115" y="90" width="80" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="gcx" value="&lt;b&gt;gcx CLI&lt;/b&gt;&lt;br/&gt;fleet collectors / pipelines&lt;br/&gt;tenant limits" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="240" width="210" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="scripts" value="&lt;b&gt;scripts/&lt;/b&gt;&lt;br/&gt;sync-pipelines.py&lt;br/&gt;upsert-pipeline.py (break-glass)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="360" width="210" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- GitHub -->
+        <mxCell id="repo" value="&lt;b&gt;otelcol-fleet-demo repo&lt;/b&gt;&lt;br/&gt;pipelines/*.yaml&lt;br/&gt;&lt;i&gt;source of truth&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+          <mxGeometry x="370" y="90" width="230" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="action" value="&lt;b&gt;GitHub Actions&lt;/b&gt;&lt;br/&gt;fleet-management-sync-action" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+          <mxGeometry x="370" y="220" width="230" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Grafana Cloud -->
+        <mxCell id="fm" value="&lt;b&gt;Fleet Management&lt;/b&gt;&lt;br/&gt;Pipeline API&lt;br/&gt;OpAMP server /v1/opamp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="730" y="100" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="pipes" value="&lt;b&gt;Configuration pipelines&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;baseline-hostmetrics — fleet=&quot;otelcol-fleet-demo&quot;&lt;br/&gt;production-extras — environment=&quot;production&quot;&lt;br/&gt;dev-otlp-debug — environment=&quot;dev&quot;&lt;br/&gt;cloud-export (disabled) — environment=&quot;production&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="90" width="300" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="gw" value="&lt;b&gt;OTLP gateway&lt;/b&gt;&lt;br/&gt;metrics / logs / traces" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="360" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Fleet -->
+        <mxCell id="c1" value="&lt;b&gt;collector-prod-checkout&lt;/b&gt;&lt;br/&gt;OpAMP Supervisor ▸ otelcol-contrib&lt;br/&gt;&lt;i&gt;environment=production · team=checkout&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="370" y="620" width="290" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="&lt;b&gt;collector-prod-payments&lt;/b&gt;&lt;br/&gt;OpAMP Supervisor ▸ otelcol-contrib&lt;br/&gt;&lt;i&gt;environment=production · team=payments&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="690" y="620" width="290" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="&lt;b&gt;collector-dev-checkout&lt;/b&gt;&lt;br/&gt;OpAMP Supervisor ▸ otelcol-contrib&lt;br/&gt;&lt;i&gt;environment=dev · team=checkout&lt;/i&gt;&lt;br/&gt;OTLP :4317 / :4318" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="620" width="290" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tgen" value="telemetrygen (make traces)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="780" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edges: GitOps loop -->
+        <mxCell id="e1" value="PR merge to main" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=11;" edge="1" parent="1" source="dev" target="repo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="on: push pipelines/**" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=11;" edge="1" parent="1" source="repo" target="action">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="SyncPipelines&#10;(namespace: otelcol-fleet-demo)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.7;fontSize=11;" edge="1" parent="1" source="action" target="fm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="matches collectors&#10;by attributes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=none;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=11;" edge="1" parent="1" source="fm" target="pipes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Edges: local tooling -->
+        <mxCell id="e5" value="read: list / get / limits" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.2;fontSize=11;" edge="1" parent="1" source="gcx" target="fm">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="275" />
+              <mxPoint x="660" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" value="SyncPipelines / UpsertPipeline&#10;(local + break-glass)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.45;fontSize=11;" edge="1" parent="1" source="scripts" target="fm">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="675" y="400" />
+              <mxPoint x="675" y="145" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Edges: OpAMP -->
+        <mxCell id="e7" value="OpAMP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;startArrow=classic;endArrow=classic;exitX=0.2;exitY=1;entryX=0.5;entryY=0;fontSize=11;" edge="1" parent="1" source="fm" target="c1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="782" y="520" />
+              <mxPoint x="515" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" value="OpAMP: remote config ↓&#10;health + effective config ↑" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;startArrow=classic;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=11;" edge="1" parent="1" source="fm" target="c2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="520" />
+              <mxPoint x="835" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" value="OpAMP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;startArrow=classic;endArrow=classic;exitX=0.8;exitY=1;entryX=0.5;entryY=0;fontSize=11;" edge="1" parent="1" source="fm" target="c3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="938" y="520" />
+              <mxPoint x="1155" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Edges: telemetry -->
+        <mxCell id="e10" value="OTLP gRPC :4317" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=1;exitY=0.5;entryX=0.5;entryY=1;fontSize=11;" edge="1" parent="1" source="tgen" target="c3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1155" y="805" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" value="cloud-export (optional)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;exitX=1;exitY=0.3;entryX=0.5;entryY=1;fontSize=11;" edge="1" parent="1" source="c2" target="gw">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1160" y="653" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;exitX=0.9;exitY=0;entryX=0.2;entryY=1;fontSize=11;" edge="1" parent="1" source="c1" target="gw">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="631" y="545" />
+              <mxPoint x="1082" y="545" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

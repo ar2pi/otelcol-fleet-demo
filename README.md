@@ -24,6 +24,11 @@ flowchart LR
     fm -- OpAMP --> c3[collector-dev-checkout<br/>environment=dev]
 ```
 
+An editable draw.io version of the full architecture (including the gcx and
+break-glass paths) lives at [docs/architecture.drawio](docs/architecture.drawio)
+— open it at [app.diagrams.net](https://app.diagrams.net) or with the draw.io
+desktop app / VS Code extension.
+
 The local fleet is three dockerized collectors with different attributes, so
 you can see attribute-based targeting (matchers) in action:
 
@@ -129,7 +134,9 @@ Things to show, roughly in order of wow:
 │   └── cloud-export.yaml           # disabled by default; OTLP → Grafana Cloud
 ├── examples/                   # ad-hoc pipelines for gcx, NOT synced by CI
 │   └── canary-checkout-debug.yaml
-├── docs/gcx-workflow.md        # inspect + break-glass workflow with the gcx CLI
+├── docs/
+│   ├── architecture.drawio     # editable architecture diagram (draw.io)
+│   └── gcx-workflow.md         # inspect + break-glass workflow with the gcx CLI
 ├── .github/workflows/sync-pipelines.yml   # GitOps sync on push to main
 ├── scripts/sync-pipelines.py   # same sync, runnable locally
 └── docker-compose.yml          # the 3-collector fleet + telemetrygen
