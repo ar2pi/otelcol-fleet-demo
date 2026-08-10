@@ -72,18 +72,26 @@ git show main:pipelines/dev-otlp-debug.yaml
 Scenario: the `checkout` team's collectors are misbehaving and you want
 detailed debug output from them *now*, without waiting for a PR cycle.
 
-The pipeline manifests in this repo are already in the format the API (and
-`gcx fleet pipelines create -f`) expects. A canary manifest targeting only
-`team="checkout"` lives in [`examples/canary-checkout-debug.yaml`](../examples/canary-checkout-debug.yaml)
-— note it's in `examples/`, not `pipelines/`, so the GitOps sync never touches
-it:
+Two routes, depending on the pipeline type. As of gcx fleet provider
+`v1alpha1`, `gcx fleet pipelines create` **only accepts Alloy-type
+pipelines** — contents are validated as Alloy (River) syntax and names must be
+valid Alloy identifiers (underscores, no dashes). OTel-type pipelines (what
+this demo's collectors run) go through the Pipeline API instead.
+
+Both canary manifests live in `examples/`, not `pipelines/`, so the GitOps
+sync never deploys or deletes them.
+
+### 3a. OTel fleet (this demo) — via the Pipeline API
+
+[`examples/canary-checkout-debug.yaml`](../examples/canary-checkout-debug.yaml)
+targets only `team="checkout"`:
 
 ```sh
 # 1. Read current state first
 gcx fleet pipelines list
 
-# 2. Create the canary
-gcx fleet pipelines create -f examples/canary-checkout-debug.yaml
+# 2. Create the canary (FM_API_TOKEN = the fleet-management:write token)
+FM_API_TOKEN=<token> ./scripts/upsert-pipeline.py examples/canary-checkout-debug.yaml
 
 # 3. Verify it deployed and only matched checkout collectors
 gcx fleet pipelines get canary-checkout-debug -o yaml
@@ -91,7 +99,20 @@ gcx fleet collectors get collector-prod-checkout -o yaml
 
 # 4. Investigate (make logs shows the extra debug output on checkout
 #    collectors only), then clean up
-gcx fleet pipelines delete canary-checkout-debug
+FM_API_TOKEN=<token> ./scripts/upsert-pipeline.py --delete canary-checkout-debug
+```
+
+### 3b. Alloy fleet — pure gcx
+
+gcx expects the k8s-style resource manifest (`apiVersion`/`kind`/`metadata`/
+`spec`) — discover the format with `gcx resources examples pipelines -o yaml`.
+[`examples/canary-alloy-debug.yaml`](../examples/canary-alloy-debug.yaml) is
+ready to go:
+
+```sh
+gcx fleet pipelines create -f examples/canary-alloy-debug.yaml
+gcx fleet pipelines get canary_checkout_debug -o yaml
+gcx fleet pipelines delete canary_checkout_debug
 ```
 
 ## Caveats: gcx writes vs GitOps
@@ -105,3 +126,7 @@ gcx fleet pipelines delete canary-checkout-debug
   them — but that also means *you* own their cleanup.
 - Give ad-hoc pipelines an obvious prefix (`canary-`, `incident-`) so they're
   easy to spot and reap in `gcx fleet pipelines list`.
+- `gcx fleet pipelines/collectors get <name>` resolves the *registered* name
+  (`spec.name`, e.g. `collector-prod-checkout`), not the synthetic
+  `metadata.name` shown by `list` (e.g. `resource-82c42b...`,
+  `canary-checkout-debug-13135`).

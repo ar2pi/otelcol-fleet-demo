@@ -1,9 +1,12 @@
-# Ad-hoc canary pipeline for gcx break-glass workflows — see docs/gcx-workflow.md.
+# Ad-hoc OTel canary pipeline for break-glass workflows — see docs/gcx-workflow.md.
 # Lives in examples/ (NOT pipelines/) on purpose: the GitOps sync only scans
 # pipelines/, so this is only ever deployed explicitly via:
 #
-#   gcx fleet pipelines create -f examples/canary-checkout-debug.yaml
-#   gcx fleet pipelines delete canary-checkout-debug   # when done
+#   FM_API_TOKEN=<write-token> ./scripts/upsert-pipeline.py examples/canary-checkout-debug.yaml
+#   FM_API_TOKEN=<write-token> ./scripts/upsert-pipeline.py --delete canary-checkout-debug
+#
+# (Deployed via the Pipeline API, not gcx: `gcx fleet pipelines create`
+# currently only accepts Alloy-type pipelines — see examples/canary-alloy-debug.yaml.)
 #
 name: canary-checkout-debug
 config_type: otel

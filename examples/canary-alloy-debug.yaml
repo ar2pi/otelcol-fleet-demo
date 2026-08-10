@@ -1,0 +1,25 @@
+# Ad-hoc canary pipeline in the manifest format the gcx CLI expects
+# (k8s-style resource — discover it with: gcx resources examples pipelines -o yaml).
+#
+#   gcx fleet pipelines create -f examples/canary-alloy-debug.yaml
+#   gcx fleet pipelines get canary_checkout_debug -o yaml
+#   gcx fleet pipelines delete canary_checkout_debug
+#
+# NOTE: gcx currently creates Alloy-type pipelines only — contents are
+# validated as Alloy (River) syntax and the name must be a valid Alloy
+# identifier (underscores, no dashes). For an OTel-type canary that applies to
+# this demo's collectors, use examples/canary-checkout-debug.yaml with
+# scripts/upsert-pipeline.py instead.
+apiVersion: fleet.ext.grafana.app/v1alpha1
+kind: Pipeline
+metadata:
+  name: canary_checkout_debug
+spec:
+  name: canary_checkout_debug
+  enabled: true
+  matchers:
+    - team="checkout"
+  contents: |
+    logging {
+      level = "debug"
+    }
