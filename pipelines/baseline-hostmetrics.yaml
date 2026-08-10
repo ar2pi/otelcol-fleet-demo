@@ -1,0 +1,25 @@
+# Applies to every collector in this demo fleet (all of them report the
+# non-identifying attribute fleet="otelcol-fleet-demo" via their supervisor).
+name: baseline-hostmetrics
+config_type: otel
+enabled: true
+matchers:
+  - fleet="otelcol-fleet-demo"
+contents: |
+  receivers:
+    hostmetrics:
+      collection_interval: 30s
+      scrapers:
+        cpu: {}
+        memory: {}
+  processors:
+    batch: {}
+  exporters:
+    debug/baseline:
+      verbosity: basic
+  service:
+    pipelines:
+      metrics/baseline:
+        receivers: [hostmetrics]
+        processors: [batch]
+        exporters: [debug/baseline]

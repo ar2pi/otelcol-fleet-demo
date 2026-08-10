@@ -1,0 +1,57 @@
+x-collector: &collector
+  build: ./collector
+  restart: unless-stopped
+  env_file: .env
+
+services:
+  # Production fleet: matched by pipelines with environment="production"
+  collector-prod-checkout:
+    <<: *collector
+    environment:
+      FLEET_COLLECTOR_NAME: collector-prod-checkout
+      FLEET_ENVIRONMENT: production
+      FLEET_TEAM: checkout
+    volumes:
+      - prod-checkout-state:/var/lib/otelcol/supervisor
+
+  collector-prod-payments:
+    <<: *collector
+    environment:
+      FLEET_COLLECTOR_NAME: collector-prod-payments
+      FLEET_ENVIRONMENT: production
+      FLEET_TEAM: payments
+    volumes:
+      - prod-payments-state:/var/lib/otelcol/supervisor
+
+  # Dev collector: matched by environment="dev" pipelines; exposes OTLP so you
+  # can send test telemetry from the host once the dev pipeline is synced.
+  collector-dev-checkout:
+    <<: *collector
+    environment:
+      FLEET_COLLECTOR_NAME: collector-dev-checkout
+      FLEET_ENVIRONMENT: dev
+      FLEET_TEAM: checkout
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - dev-checkout-state:/var/lib/otelcol/supervisor
+
+  # Optional load generator: `make traces` or
+  # `docker compose --profile loadgen run --rm telemetrygen`
+  telemetrygen:
+    profiles: [loadgen]
+    image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:latest
+    command:
+      - traces
+      - --otlp-endpoint=collector-dev-checkout:4317
+      - --otlp-insecure
+      - --duration=10s
+      - --rate=5
+    depends_on:
+      - collector-dev-checkout
+
+volumes:
+  prod-checkout-state:
+  prod-payments-state:
+  dev-checkout-state:

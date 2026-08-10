@@ -1,0 +1,25 @@
+server:
+  endpoint: "${env:GCLOUD_FM_URL}/v1/opamp"
+  headers:
+    Authorization: "Basic ${env:GCLOUD_BASIC_AUTH_BASE64}"
+
+capabilities:
+  reports_effective_config: true
+  accepts_remote_config: true
+  reports_remote_config: true
+
+agent:
+  executable: /usr/local/bin/otelcol-contrib
+  description:
+    identifying_attributes:
+      service.name: "${env:FLEET_COLLECTOR_NAME}"
+    non_identifying_attributes:
+      fleet: "otelcol-fleet-demo"
+      environment: "${env:FLEET_ENVIRONMENT}"
+      team: "${env:FLEET_TEAM}"
+  # Allow the collector to boot with an empty config until Fleet Management
+  # delivers the first remote configuration over OpAMP.
+  args: [--feature-gates, service.AllowNoPipelines]
+
+storage:
+  directory: /var/lib/otelcol/supervisor

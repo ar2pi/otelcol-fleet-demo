@@ -1,0 +1,27 @@
+# Dev collectors accept OTLP and dump everything to stdout in full detail.
+# After this pipeline syncs, the dev collector starts listening on 4317/4318 —
+# a config change delivered remotely over OpAMP, no restart needed.
+name: dev-otlp-debug
+config_type: otel
+enabled: true
+matchers:
+  - environment="dev"
+contents: |
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  exporters:
+    debug/dev:
+      verbosity: detailed
+  service:
+    pipelines:
+      traces/dev:
+        receivers: [otlp]
+        exporters: [debug/dev]
+      logs/dev:
+        receivers: [otlp]
+        exporters: [debug/dev]

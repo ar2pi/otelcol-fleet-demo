@@ -1,0 +1,36 @@
+# Ships production host metrics to Grafana Cloud via the OTLP gateway.
+# Disabled by default: set GCLOUD_OTLP_ENDPOINT and GCLOUD_OTLP_INSTANCE_ID in
+# .env, flip `enabled` to true, and sync — the fleet picks it up remotely.
+# The ${env:...} references resolve inside each collector container at runtime,
+# so no secrets ever land in this repo or in Fleet Management.
+name: cloud-export
+config_type: otel
+enabled: false
+matchers:
+  - environment="production"
+contents: |
+  extensions:
+    basicauth/grafana-cloud:
+      client_auth:
+        username: "${env:GCLOUD_OTLP_INSTANCE_ID}"
+        password: "${env:GCLOUD_RW_API_KEY}"
+  receivers:
+    hostmetrics/cloud:
+      collection_interval: 60s
+      scrapers:
+        cpu: {}
+        memory: {}
+  processors:
+    batch/cloud: {}
+  exporters:
+    otlphttp/grafana-cloud:
+      endpoint: "${env:GCLOUD_OTLP_ENDPOINT}"
+      auth:
+        authenticator: basicauth/grafana-cloud
+  service:
+    extensions: [basicauth/grafana-cloud]
+    pipelines:
+      metrics/cloud:
+        receivers: [hostmetrics/cloud]
+        processors: [batch/cloud]
+        exporters: [otlphttp/grafana-cloud]

@@ -1,0 +1,25 @@
+name: Sync pipelines to Fleet Management
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pipelines/**"
+      - ".github/workflows/sync-pipelines.yml"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: grafana/fleet-management-sync-action@v1
+        with:
+          pipelines-root-path: ./pipelines
+          fm-url: ${{ secrets.FM_URL }}
+          fm-username: ${{ secrets.FM_INSTANCE_ID }}
+          fm-token: ${{ secrets.FM_API_TOKEN }}
+          # Namespace scopes the sync: pipelines previously synced under this
+          # namespace but no longer present in pipelines/ get deleted. Keep it
+          # identical to NAMESPACE in scripts/sync-pipelines.py.
+          namespace: otelcol-fleet-demo
