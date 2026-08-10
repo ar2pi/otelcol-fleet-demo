@@ -37,3 +37,6 @@ Management API by GitHub Actions (GitOps) or `scripts/sync-pipelines.py`.
   resolved inside the collector container from `.env`.
 - Version pinning is a single ARG (`OTEL_VERSION`) in `collector/Dockerfile`;
   supervisor and collector images must share the same version.
+- `examples/` holds ad-hoc pipeline manifests for the gcx CLI break-glass
+  workflow (`docs/gcx-workflow.md`). They are deliberately outside `pipelines/`
+  so the GitOps sync never deploys or deletes them — don't move them in.

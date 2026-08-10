@@ -111,6 +111,9 @@ Things to show, roughly in order of wow:
    merge, and prod collectors start exporting host metrics to your stack.
    Secrets stay on the collectors as env vars (`${env:...}`) — never in git or
    in Fleet Management.
+6. **Break-glass with gcx** — inspect live fleet state and deploy a temporary
+   canary pipeline from the CLI, no PR cycle: see
+   [docs/gcx-workflow.md](docs/gcx-workflow.md).
 
 ## Repo layout
 
@@ -124,6 +127,9 @@ Things to show, roughly in order of wow:
 │   ├── production-extras.yaml      # matchers: environment="production"
 │   ├── dev-otlp-debug.yaml         # matchers: environment="dev"
 │   └── cloud-export.yaml           # disabled by default; OTLP → Grafana Cloud
+├── examples/                   # ad-hoc pipelines for gcx, NOT synced by CI
+│   └── canary-checkout-debug.yaml
+├── docs/gcx-workflow.md        # inspect + break-glass workflow with the gcx CLI
 ├── .github/workflows/sync-pipelines.yml   # GitOps sync on push to main
 ├── scripts/sync-pipelines.py   # same sync, runnable locally
 └── docker-compose.yml          # the 3-collector fleet + telemetrygen

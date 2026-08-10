@@ -1,0 +1,28 @@
+# Ad-hoc canary pipeline for gcx break-glass workflows — see docs/gcx-workflow.md.
+# Lives in examples/ (NOT pipelines/) on purpose: the GitOps sync only scans
+# pipelines/, so this is only ever deployed explicitly via:
+#
+#   gcx fleet pipelines create -f examples/canary-checkout-debug.yaml
+#   gcx fleet pipelines delete canary-checkout-debug   # when done
+#
+name: canary-checkout-debug
+config_type: otel
+enabled: true
+matchers:
+  - team="checkout"
+contents: |
+  receivers:
+    hostmetrics/canary:
+      collection_interval: 5s
+      scrapers:
+        cpu: {}
+        memory: {}
+        processes: {}
+  exporters:
+    debug/canary:
+      verbosity: detailed
+  service:
+    pipelines:
+      metrics/canary:
+        receivers: [hostmetrics/canary]
+        exporters: [debug/canary]
