@@ -3,7 +3,7 @@
 # .env, flip `enabled` to true, and sync — the fleet picks it up remotely.
 # The ${env:...} references resolve inside each collector container at runtime,
 # so no secrets ever land in this repo or in Fleet Management.
-name: cloud-export
+name: cloud_export
 config_type: otel
 enabled: false
 matchers:

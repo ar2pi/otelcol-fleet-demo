@@ -1,6 +1,6 @@
 # Applies to every collector in this demo fleet (all of them report the
 # non-identifying attribute fleet="otelcol-fleet-demo" via their supervisor).
-name: baseline-hostmetrics
+name: baseline_hostmetrics
 config_type: otel
 enabled: true
 matchers:

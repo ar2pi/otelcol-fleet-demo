@@ -1,7 +1,7 @@
 # Only production collectors get the heavier scrape set. Component names are
 # suffixed (/prod) so this config merges cleanly with baseline-hostmetrics
 # when Fleet Management combines all matching pipelines into one config.
-name: production-extras
+name: production_extras
 config_type: otel
 enabled: true
 matchers:

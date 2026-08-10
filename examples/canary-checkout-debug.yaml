@@ -3,12 +3,12 @@
 # pipelines/, so this is only ever deployed explicitly via:
 #
 #   FM_API_TOKEN=<write-token> ./scripts/upsert-pipeline.py examples/canary-checkout-debug.yaml
-#   FM_API_TOKEN=<write-token> ./scripts/upsert-pipeline.py --delete canary-checkout-debug
+#   FM_API_TOKEN=<write-token> ./scripts/upsert-pipeline.py --delete canary_checkout_debug
 #
 # (Deployed via the Pipeline API, not gcx: `gcx fleet pipelines create`
 # currently only accepts Alloy-type pipelines.)
 #
-name: canary-checkout-debug
+name: canary_checkout_debug
 config_type: otel
 enabled: true
 matchers:

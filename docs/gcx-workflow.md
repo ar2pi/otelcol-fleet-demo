@@ -44,7 +44,7 @@ gcx fleet collectors get collector-prod-checkout -o yaml
 
 # What configuration is deployed right now?
 gcx fleet pipelines list
-gcx fleet pipelines get baseline-hostmetrics -o yaml
+gcx fleet pipelines get baseline_hostmetrics -o yaml
 
 # Tenant quotas (pipeline/collector limits)
 gcx fleet tenant limits
@@ -63,7 +63,7 @@ After merging a change to `pipelines/`:
 
 ```sh
 # Compare what's deployed against what's in git
-gcx fleet pipelines get dev-otlp-debug -o yaml
+gcx fleet pipelines get dev_otlp_debug -o yaml
 git show main:pipelines/dev-otlp-debug.yaml
 ```
 
@@ -90,12 +90,12 @@ gcx fleet pipelines list
 FM_API_TOKEN=<token> ./scripts/upsert-pipeline.py examples/canary-checkout-debug.yaml
 
 # 3. Verify it deployed and only matched checkout collectors
-gcx fleet pipelines get canary-checkout-debug -o yaml
+gcx fleet pipelines get canary_checkout_debug -o yaml
 gcx fleet collectors get collector-prod-checkout -o yaml
 
 # 4. Investigate (make logs shows the extra debug output on checkout
 #    collectors only), then clean up
-FM_API_TOKEN=<token> ./scripts/upsert-pipeline.py --delete canary-checkout-debug
+FM_API_TOKEN=<token> ./scripts/upsert-pipeline.py --delete canary_checkout_debug
 ```
 
 ## Caveats: gcx writes vs GitOps
@@ -107,7 +107,7 @@ FM_API_TOKEN=<token> ./scripts/upsert-pipeline.py --delete canary-checkout-debug
 - Ad-hoc pipelines created with gcx (like the canary) are outside the
   `otelcol-fleet-demo` sync namespace, so the GitHub Action won't delete
   them — but that also means *you* own their cleanup.
-- Give ad-hoc pipelines an obvious prefix (`canary-`, `incident-`) so they're
+- Give ad-hoc pipelines an obvious prefix (`canary_`, `incident_`) so they're
   easy to spot and reap in `gcx fleet pipelines list`.
 - `gcx fleet pipelines/collectors get <name>` resolves the *registered* name
   (`spec.name`, e.g. `collector-prod-checkout`), not the synthetic
