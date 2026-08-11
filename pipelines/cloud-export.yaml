@@ -21,6 +21,23 @@ contents: |
         memory: {}
   processors:
     batch/cloud: {}
+    # hostmetrics data has an empty resource — without service.name the OTLP
+    # gateway can't set a job label and all collectors collide into the same
+    # series. Stamp identity from each container's env.
+    resource/cloud:
+      attributes:
+        - key: service.name
+          value: "${env:FLEET_COLLECTOR_NAME}"
+          action: upsert
+        - key: environment
+          value: "${env:FLEET_ENVIRONMENT}"
+          action: upsert
+        - key: team
+          value: "${env:FLEET_TEAM}"
+          action: upsert
+        - key: fleet
+          value: otelcol-fleet-demo
+          action: upsert
   exporters:
     otlphttp/grafana-cloud:
       endpoint: "${env:GCLOUD_OTLP_ENDPOINT}"
@@ -31,5 +48,5 @@ contents: |
     pipelines:
       metrics/cloud:
         receivers: [hostmetrics/cloud]
-        processors: [batch/cloud]
+        processors: [resource/cloud, batch/cloud]
         exporters: [otlphttp/grafana-cloud]
